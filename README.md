@@ -10,6 +10,7 @@ use case. It uses OpenAI capabilities to interpret unstructured data and extract
 Make sure you have the following software installed:
 * Node 18.12.1 or above
 * NPM 9.1.2 or above
+* Postman App (optional)
 
 ## Local Setup
 
@@ -30,3 +31,7 @@ Afterwards, you can run the software
 ```shell
 npm start
 ```
+
+## Testing
+
+You can import the Postman collection into your local Postman app to test the API calls.
