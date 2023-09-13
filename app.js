@@ -24,16 +24,21 @@ app.post('/familySituation', (req, res) => {
     console.log('Calling familySituation endpoint')
     const { text } = req.body
     if (text) {
-        prompt.format({ text }).then(formattedPrompt =>{
-            console.log('Calling OpenAI service')
-            getKyc(formattedPrompt).then(result => {
-                console.log(`OpenAI service call returned successfully with result: ${result}`)
-                res.send(result)
-            }, error => {
-                console.error(error)
-                res.status(500).send(error)
+        try {
+            prompt.format({ text }).then(formattedPrompt =>{
+                console.log('Calling OpenAI service')
+                getKyc(formattedPrompt).then(result => {
+                    console.log(`OpenAI service call returned successfully with result: ${result}`)
+                    res.send(result)
+                }, error => {
+                    console.error(error)
+                    res.status(500).send(error)
+                })
             })
-        })
+        } catch (e) {
+            console.error(`Error while calling familySituation endpoint`, e)
+            res.status(500).send(e)
+        }
     } else {
         res.status(400).json({
             message: 'Missing required property: text'
