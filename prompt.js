@@ -24,6 +24,7 @@ const systemPrompt = `
     Names should always be displayed as "Firstname Lastname"
     Feel free to fix any typos. 
     Add an additional property "remarks" for additional information and hints that do not fit the other properties. 
+    Your response must only contain the JSON object and nothing else!
 `
 
 export { systemPrompt }
