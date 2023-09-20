@@ -19,6 +19,7 @@ app.options('*', cors())
 
 const llm = new OpenAI({
     modelName: 'gpt-4',
+    temperature: 0.2,
     openAIApiKey: apiKeyOpenAI
 });
 const prompt = PromptTemplate.fromTemplate(systemPrompt)
