@@ -8,6 +8,9 @@ const app = express()
 const port = process.env.PORT || 3000
 const apiKeyOpenAI = process.env.OPENAI_API_KEY
 
+// Define a regular expression pattern to match JSON objects
+const jsonPattern = /{(?:[^{}]|{(?:[^{}]|{[^{}]*})*})*}/;
+
 app.use(express.json())
 app.use(cors())
 
@@ -16,6 +19,7 @@ app.options('*', cors())
 
 const llm = new OpenAI({
     modelName: 'gpt-4',
+    temperature: 0.2,
     openAIApiKey: apiKeyOpenAI
 });
 const prompt = PromptTemplate.fromTemplate(systemPrompt)
@@ -26,10 +30,16 @@ app.post('/familySituation', (req, res) => {
     if (text) {
         try {
             prompt.format({ text }).then(formattedPrompt =>{
-                console.log('Calling OpenAI service')
+                console.log('Calling OpenAI service', formattedPrompt)
                 getKyc(formattedPrompt).then(result => {
                     console.log(`OpenAI service call returned successfully with result: ${result}`)
-                    res.send(result)
+                    const match = result.match(jsonPattern);
+                    if (match && match.length > 0) {
+                        res.send(JSON.parse(match[0]))
+                    } else {
+                        console.log('No response JSON found, therefore returning an empty object')
+                        res.send({})
+                    }
                 }, error => {
                     console.error(error)
                     res.status(500).send(error)
