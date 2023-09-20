@@ -35,3 +35,12 @@ npm start
 ## Testing
 
 You can import the Postman collection into your local Postman app to test the API calls.
+
+## Deployment
+
+The app can easily be deployed on GCP App Engine. Please make sure you have the gcloud CLI
+installed and are logged in. In that case all you need to do is to execute the following
+command and enter the required information:
+```
+gcloud app deploy    
+```
