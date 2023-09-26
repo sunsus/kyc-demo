@@ -1,12 +1,22 @@
+import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import { OpenAI } from 'langchain/llms/openai'
 import {PromptTemplate} from 'langchain/prompts';
-import { systemPrompt } from './prompt.js'
+import {
+    BlobServiceClient,
+    generateAccountSASQueryParameters,
+    AccountSASPermissions,
+    AccountSASServices,
+    AccountSASResourceTypes,
+    StorageSharedKeyCredential,
+    SASProtocol
+} from "@azure/storage-blob";
 
-const app = express()
-const port = process.env.PORT || 3000
-const apiKeyOpenAI = process.env.OPENAI_API_KEY
+import { systemPrompt } from './prompt.js'
+import {config} from './config.js'
+const app = express();
+
 
 // Define a regular expression pattern to match JSON objects
 const jsonPattern = /{(?:[^{}]|{(?:[^{}]|{[^{}]*})*})*}/;
@@ -20,7 +30,7 @@ app.options('*', cors())
 const llm = new OpenAI({
     modelName: 'gpt-4',
     temperature: 0.2,
-    openAIApiKey: apiKeyOpenAI
+    openAIApiKey: config.apiKeyOpenAI
 });
 const prompt = PromptTemplate.fromTemplate(systemPrompt)
 
@@ -55,11 +65,15 @@ app.post('/familySituation', (req, res) => {
         })
     }
 })
+console.log("account name", process.env.AZURE_STORAGE_ACCOUNT_NAME);
+// Use Api routes in the App
+import { default as idDocumentOcrRoutes } from './controllers/id-document-ocr.controller.js';
 
+app.use("/ocr", idDocumentOcrRoutes);
 async function getKyc(prompt) {
     return await llm.predict(prompt);
 }
 
-app.listen(port, () => {
-    console.log(`Server successfully started on port ${port}`)
+app.listen(config.expressPort, () => {
+    console.log(`Server successfully started on port ${config.expressPort}`)
 })
