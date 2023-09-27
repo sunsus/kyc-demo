@@ -1,6 +1,6 @@
-import {default as express} from 'express';
+import express from 'express';
 import {default as multer} from 'multer';
-import {default as path} from 'path';
+import path from 'path';
 import { DocumentAnalysisClient, AzureKeyCredential } from "@azure/ai-form-recognizer";
 import {
     generateBlobSASQueryParameters,
@@ -51,13 +51,6 @@ var uploadFilesToBlob = async (directoryPath, containerName1, files) => {
     // Create a container
     const containerName = config.azureStorageConfig.containerName ? config.azureStorageConfig.containerName : `newcontainer${new Date().getTime()}`
     const containerClient = blobServiceClient.getContainerClient(containerName)
-    //   try {
-    //      await containerClient.createIfNotExists()
-
-    //   } catch (err) {
-    //       console.log("error", err);
-    //     console.log(`Creating a container fails, requestId - ${err.details.requestId}, statusCode - ${err.statusCode}, errorCode - ${err.details.errorCode}`)
-    //   }
 
     files.forEach((file) => {
         const blobName = getBlobName(file)
@@ -142,13 +135,14 @@ const processDocument = async (req, res, next) => {
                 documents // extracted documents (instances of one of the model's document types and its field schema)
             } = await poller.pollUntilDone();
             const result =documents.map(doc => {return {
-                                                                    documentTyp: doc.fields.DocumentType?.value,
+                                                                    docType: doc.docType,
                                                                     documentNumber: doc.fields.DocumentNumber?.value,
                                                                     firstName: doc.fields.FirstName?.value.replace(/[»*·]/g, ''),
                                                                     lastName: doc.fields.LastName?.value.replace(/[»*·]/g, ''),
                                                                     dateOfBirth: doc.fields.DateOfBirth?.value || doc.fields.MachineReadableZone?.properties.DateOfBirth?.value,
                                                                     dateOfExpiration: doc.fields.DateOfExpiration?.value || doc.fields.MachineReadableZone?.properties.DateOfExpiration?.value,
-                                                                    dateOfIssue: doc.fields.DateOfIssue?.value || doc.fields.MachineReadableZone?.properties.DateOfIssue?.value
+                                                                    dateOfIssue: doc.fields.DateOfIssuec?.value || doc.fields.MachineReadableZone?.properties.DateOfIssue?.value,
+                                                                    nationality: doc.fields.MachineReadableZone?.properties.Nationality?.value
                                                                     }});
             return result.reduce((result, obj) => {
                 Object.entries(obj).forEach(([key, value]) => {
