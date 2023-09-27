@@ -1,18 +1,7 @@
-import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import { OpenAI } from 'langchain/llms/openai'
 import {PromptTemplate} from 'langchain/prompts';
-import {
-    BlobServiceClient,
-    generateAccountSASQueryParameters,
-    AccountSASPermissions,
-    AccountSASServices,
-    AccountSASResourceTypes,
-    StorageSharedKeyCredential,
-    SASProtocol
-} from "@azure/storage-blob";
-
 import { systemPrompt } from './prompt.js'
 import {config} from './config.js'
 const app = express();
@@ -29,7 +18,7 @@ app.options('*', cors())
 
 const llm = new OpenAI({
     modelName: 'gpt-4',
-    temperature: 0.2,
+    temperature: 0.0,
     openAIApiKey: config.apiKeyOpenAI
 });
 const prompt = PromptTemplate.fromTemplate(systemPrompt)

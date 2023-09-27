@@ -13,7 +13,7 @@ const systemPrompt = `
         "relationshipStatus": "married, single, etc. "
         "relationships": [
             {{
-                "relation": "daughter, husband, etc.",
+                "relation": "daughter, husband, mother, father, etc.",
                 "fullName": "The full name of the person as 'FirstName LastName",
                 "dateOfBirth": "dd.mm.yyyy",
                 "dateOfDeath": "dd.mm.yyyy"
@@ -24,7 +24,7 @@ const systemPrompt = `
     Names should always be displayed as "Firstname Lastname"
     Feel free to fix any typos. 
     Add an additional top-level property "remarks" for additional information and hints that do not fit the other properties. 
-    If you find any irregularities or contradictions, please add them to the "remarks" property as well.
+    If you find any irregularities, contradictions or missing information please add them to the "remarks" property as well.
     Your response must only contain the JSON object and nothing else!
 `
 
