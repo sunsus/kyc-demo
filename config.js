@@ -1,3 +1,4 @@
+import 'dotenv/config'
 const config = {
     secret: process.env.SECRET,
     azureStorageConfig: {

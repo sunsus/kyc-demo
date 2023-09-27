@@ -10,29 +10,26 @@ import {
     StorageSharedKeyCredential,
     BlobSASPermissions,
 } from '@azure/storage-blob';
-
-var router = express.Router({ mergeParams: true });
-const inMemoryStorage = multer.memoryStorage()
-const credential = new AzureKeyCredential(config.cognitiveKey);
-
-
 import getStream from "into-stream";
 import { v4 as uuidv4 } from 'uuid';
 import {config} from '../config.js'
 
 import {setLogLevel} from '@azure/logger';
-import Promiss from "express/lib/application.js";
+
+let router = express.Router({ mergeParams: true });
+const inMemoryStorage = multer.memoryStorage()
+const credential = new AzureKeyCredential(config.cognitiveKey);
+
 setLogLevel("info")
 
 // Use StorageSharedKeyCredential with storage account and account key
-
 const getBlobName = (file) => {
     const fileName = Date.now() + "-" + uuidv4() + path.extname(file.originalname)
     return fileName
 }
 
-var uploadFilesToBlob = async (directoryPath, containerName1, files) => {
-    var promiseList = []
+const uploadFilesToBlob = async (directoryPath, containerName1, files) => {
+    const promiseList = []
 
     const sharedKeyCredential = new StorageSharedKeyCredential(config.azureStorageConfig.accountName, config.azureStorageConfig.accountKey)
 
